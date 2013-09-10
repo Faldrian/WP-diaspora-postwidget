@@ -1,0 +1,44 @@
+#postwidget_content {
+    width: 100%;
+    height: 13em;
+}
+
+#postwidget_buttons {
+	text-align: right;
+}
+
+#postwidget_buttons button {
+	margin-left: 5px;
+}
+
+#postwidget_buttons div {
+	float: left;
+	font-size: 1.2em;
+	padding-top: 0.6em;
+	padding-left: 0.2em;
+	display: none;
+}
+
+#postwidget_preview {
+    background-color: #fff;
+    margin-top: 1em;
+    border: 1px solid #ddd;
+    display: none;
+}
+
+/* Reset für die Preview-Area */
+#postwidget_preview * {
+    background: none;
+    border: none;
+    padding: inherit !important;
+    cursor: inherit;
+    font-family: inherit !important;
+}
+#postwidget_preview h3 {
+    color: inherit;
+}
+
+/* Bilder nicht größer als den Container anzeigen. */
+#postwidget_preview img {
+    max-width: 100%;
+}
