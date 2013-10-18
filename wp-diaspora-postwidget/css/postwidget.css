@@ -26,6 +26,14 @@
     display: none;
 }
 
+#postwidget_preview.result_ok {
+	color: green;
+}
+
+#postwidget_preview.result_error {
+	color: red;
+}
+
 /* Reset für die Preview-Area */
 #postwidget_preview * {
     background: none;
@@ -41,4 +49,16 @@
 /* Bilder nicht größer als den Container anzeigen. */
 #postwidget_preview img {
     max-width: 100%;
+}
+
+#postwidget_widget .inside table {
+    width: 100%;
+}
+#postwidget_widget .inside table th {
+    text-align: left;
+    vertical-align: top;
+    font-weight: normal;
+}
+#postwidget_widget .inside table td {
+    vertical-align: top;
 }
