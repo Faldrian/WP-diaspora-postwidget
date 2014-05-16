@@ -9,21 +9,23 @@ class Diasphp {
 		$this->token_regex = '/content="(.*?)" name="csrf-token/';
 		
 		$this->pod = $pod;
-		$this->cookiejar = tempnam(sys_get_temp_dir(), 'cookies');
+		// use tmp folder in this plugins directory
+		$this->cookiejar = tempnam(dirname(__FILE__) . '/tmp', 'cookies');
 	}
 
 	function _fetch_token() {
 		$ch = curl_init();
-		
 		curl_setopt ($ch, CURLOPT_URL, $this->pod . "/stream");
 		curl_setopt ($ch, CURLOPT_COOKIEFILE, $this->cookiejar);
 		curl_setopt ($ch, CURLOPT_COOKIEJAR, $this->cookiejar);
 		curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		
+		curl_setopt ($ch, CURLOPT_VERBOSE, true);
+		
 		$output = curl_exec ($ch);
 		curl_close($ch);
-		
+
 		// Token holen und zurückgeben
 		preg_match($this->token_regex, $output, $matches);
 		return $matches[1];

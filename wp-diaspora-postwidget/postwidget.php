@@ -7,8 +7,7 @@ Author: Faldrian
 Author URI: http://jenseitsderfenster.de/
 */
 
-// Plugin URI: http://wordpress.org/plugins/show-other-images/
-require_once('diasphp.php');
+require_once(dirname(__FILE__) . '/diasphp.php');
 
 /**
  * Called when intializing the dashboard, adds scripts / styles & the widget itself.
@@ -107,13 +106,13 @@ add_action('wp_ajax_postwidget_submit', 'postwidget_submit');
 function postwidget_submit() {
 	// Optionen zum Einloggen holen
 	$opts = get_option( 'dashboard_widget_options' );
-	
+
 	// Wenns noch nicht eingestellt ist, dann liefer einen Fehler zurück
 	if(!isset($opts['postwidget'])) {
 		die("Please configure the Diaspora-Pod first!");
 	}
 	$config = $opts['postwidget'];
-	
+
 	try {
 		$conn = new Diasphp($config['pod']);
 		$conn->login($config['poduser'], $config['podpass']);
