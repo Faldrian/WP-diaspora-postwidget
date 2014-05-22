@@ -10,3 +10,8 @@ Features:
 
 
 This will later be expanded to provide other features. Watch the issues section for details. :)
+
+
+### Used Libs
+
+* [pagedown](https://code.google.com/p/pagedown/), markdown converter written in javascript
