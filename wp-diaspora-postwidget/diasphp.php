@@ -15,16 +15,59 @@ class Diasphp {
 
 	function _fetch_token() {
 		$ch = curl_init();
+		$max_redirects = 10;
+		
 		curl_setopt ($ch, CURLOPT_URL, $this->pod . "/stream");
 		curl_setopt ($ch, CURLOPT_COOKIEFILE, $this->cookiejar);
 		curl_setopt ($ch, CURLOPT_COOKIEJAR, $this->cookiejar);
-		curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		
 		curl_setopt ($ch, CURLOPT_VERBOSE, true);
 		
-		$output = curl_exec ($ch);
-		curl_close($ch);
+		if (ini_get('open_basedir') === '' && ini_get('safe_mode' === 'Off')) {
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_MAXREDIRS, $max_redirects);
+			$output = curl_exec($ch);
+		} else {
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+			$mr = $max_redirects;
+			if ($mr > 0) {
+				$newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+		
+				$rcurl = curl_copy_handle($ch);
+				curl_setopt($rcurl, CURLOPT_HEADER, true);
+				curl_setopt($rcurl, CURLOPT_NOBODY, true);
+				curl_setopt($rcurl, CURLOPT_FORBID_REUSE, false);
+				curl_setopt($rcurl, CURLOPT_RETURNTRANSFER, true);
+				do {
+					curl_setopt($rcurl, CURLOPT_URL, $newurl);
+					$header = curl_exec($rcurl);
+					if (curl_errno($rcurl)) {
+						$code = 0;
+					} else {
+						$code = curl_getinfo($rcurl, CURLINFO_HTTP_CODE);
+						if ($code == 301 || $code == 302) {
+							preg_match('/Location:(.*?)\n/', $header, $matches);
+							$newurl = trim(array_pop($matches));
+						} else {
+							$code = 0;
+						}
+					}
+				} while ($code && --$mr);
+				curl_close($rcurl);
+				if ($mr > 0) {
+					curl_setopt($ch, CURLOPT_URL, $newurl);
+				}
+			}
+	
+			if($mr == 0 && $max_redirects > 0) {
+				$output = false;
+			} else {
+				$output = curl_exec($ch);
+			}
+		}
+	        curl_close($ch);
+
 
 		// Token holen und zurückgeben
 		preg_match($this->token_regex, $output, $matches);
