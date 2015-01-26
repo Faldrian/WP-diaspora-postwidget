@@ -38,7 +38,6 @@ class Diasphp {
 				curl_setopt($rcurl, CURLOPT_HEADER, true);
 				curl_setopt($rcurl, CURLOPT_NOBODY, true);
 				curl_setopt($rcurl, CURLOPT_FORBID_REUSE, false);
-				curl_setopt($rcurl, CURLOPT_RETURNTRANSFER, true);
 				do {
 					curl_setopt($rcurl, CURLOPT_URL, $newurl);
 					$header = curl_exec($rcurl);
